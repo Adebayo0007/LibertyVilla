@@ -1,0 +1,22 @@
+﻿@page "/bindprop";
+@using LibertyVilla_Server.Data.Model;
+<h1>Room name: @room.RoomName</h1>
+<h1>Room price: @room.Price</h1>
+<input type="number" @bind-value="room.Price" @bind-value:event="oninput"/><br />
+<input type="checkbox" @bind-value="room.IsActive" /> &nbsp; is @(room.IsActive ? "active" : "not active")
+<br />
+<span>room is @(room.IsActive? "active":"not active")</span>
+
+@code{
+   
+    Room room = new Room()
+    {
+        Id = 1,
+        RoomName = "FirstClass",
+        IsActive = false,
+        Price = 400,
+    };
+ 
+
+
+}
