@@ -1,0 +1,51 @@
+﻿@page "/Account/Login"
+@using LibertyVilla_Server.Service
+@using Business.Repository.IRepository;
+@using Models;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using Microsoft.AspNetCore.Authentication;
+@using System.Web;
+@inject IHttpContextAccessor HttpContextAccessor;
+@inject IJSRuntime JSRunTime;
+@inject NavigationManager NavigationManager;
+@inject IApplicationUserRepository ApplicationUserRepository;
+
+<div class="row mt-2 mb-5">
+    <h1 class="card-title text-info mb-3 m-lg-3"> @Tittle Page</h1>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="class-body">
+                <EditForm Model="@LoginRequestModel">
+                    <DataAnnotationsValidator />
+                    <div class="form-group m-lg-3">
+                        <label>Email</label>
+                        <InputText @bind-Value="LoginRequestModel.Email" class="form-control"></InputText>
+                        <ValidationMessage For="(()=>LoginRequestModel.Email)"></ValidationMessage>
+                    </div>
+                    <div class="form-group m-lg-3">
+                        <label>Password</label>
+                        <InputText type="password" @bind-Value="LoginRequestModel.Password" class="form-control"></InputText>
+                        <ValidationMessage For="(()=>LoginRequestModel.Password)"></ValidationMessage>
+                    </div>
+                    <div class="form-group m-lg-3">
+                            <a class="ml-md-auto btn btn-primary"
+                               href="/login?paramUsername=@encode(@LoginRequestModel.Email)&paramPassword=@encode(@LoginRequestModel.Password)"
+                               target="_top">@Tittle</a>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginRequestModel LoginRequestModel { get; set; } = new LoginRequestModel();
+    private string Tittle { get; set; } = "Login";
+    private string encode(string param)
+    {
+        return HttpUtility.UrlEncode(param);
+    }
+   
+}
+

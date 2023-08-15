@@ -2,10 +2,14 @@
 @using Business.Repository.IRepository;
 @using LibertyVilla_Server.Service.IService;
 @using Models;
+@using System.Web;
+@using System.Security.Claims;
 @inject IHotelRoomRepository HotelRoomRepository;
 @inject IJSRuntime JSRunTime;
 @inject IFileUpload FileUpload
+@*@inject AuthenticationStateProvider AuthenticationStateProvider*@
 @inject NavigationManager NavigationManager;
+@attribute [Authorize(Roles = $"SuperAdmin")]
 
 <div class="row mt-4">
     <div class="col-8">
@@ -59,14 +63,23 @@
         </table>
     </div>
 </div>
+@*accessing claims*@
+@*<p>Welcome, @UserClaims.FindFirstValue(ClaimTypes.Name)!</p>
+<p>Email: @UserClaims.FindFirstValue(ClaimTypes.Email)</p>
+<p>Role: @UserClaims.FindFirstValue(ClaimTypes.Role)</p>*@
  <DeleteConfirmation IsParentComponentProcessing="IsProcessing" ConfirmationChanged="ConfirmDelete_Click"></DeleteConfirmation>
 @code {
     private IEnumerable<HotelRoomDto> HotelRooms { get; set; } = new List<HotelRoomDto>();
     public int? DeleteRoomId { get; set; } = null;
     public bool IsProcessing { get; set; } = false;
+    //private ClaimsPrincipal UserClaims { get; set; }
     protected override async Task OnInitializedAsync()
     {
         HotelRooms = await HotelRoomRepository.GetAllHotelRoom();
+
+        //for accessing claims
+        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //UserClaims = authState.User;
     }
 
     private async Task HandleDelete(int roomId)

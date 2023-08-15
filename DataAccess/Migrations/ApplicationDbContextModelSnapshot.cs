@@ -19,6 +19,67 @@ namespace DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("DataAccess.Data.ApplicationUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateCreated = new DateTime(2023, 8, 11, 21, 10, 38, 286, DateTimeKind.Local).AddTicks(9774),
+                            Email = "tijaniadebayoabdllahi@gmail.com",
+                            Gender = "Male",
+                            IsActive = true,
+                            Name = "Adebayo Addullah",
+                            Password = "$2a$11$47FV8yZR4sVjUTbydHVI.uKFzKTaZ6310SHEWoilScdusTQukfJvu",
+                            PhoneNumber = "08087054632",
+                            Role = "SuperAdmin"
+                        });
+                });
+
             modelBuilder.Entity("DataAccess.Data.HotelRoom", b =>
                 {
                     b.Property<int>("Id")
@@ -84,12 +145,17 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Data.HotelRoomImage", b =>
                 {
                     b.HasOne("DataAccess.Data.HotelRoom", "HotelRoom")
-                        .WithMany()
+                        .WithMany("HotelRoomImages")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("HotelRoom");
+                });
+
+            modelBuilder.Entity("DataAccess.Data.HotelRoom", b =>
+                {
+                    b.Navigation("HotelRoomImages");
                 });
 #pragma warning restore 612, 618
         }

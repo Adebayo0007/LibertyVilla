@@ -12,5 +12,10 @@ namespace LibertyVilla_Server.Helper
         {
             await JSRuntime.InvokeVoidAsync("ShowToastr", "error", message);
         }
+
+        public static async ValueTask LogOut(this IJSRuntime JSRuntime)
+        {
+            await JSRuntime.InvokeVoidAsync("Logout");
+        }
     }
 }

@@ -1,0 +1,22 @@
+﻿@page "/Profile"
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>User Profile</h3>
+
+@if (IsAuthenticated)
+{
+    <p>Welcome, @Username!</p>
+}
+else
+{
+    <p>You are not authenticated.</p>
+}
+
+@code {
+    private AuthenticationState AuthenticationState => AuthenticationStateProvider.GetAuthenticationStateAsync().Result;
+
+    private bool IsAuthenticated => AuthenticationState.User.Identity.IsAuthenticated;
+
+    private string Username => AuthenticationState.User.Identity.Name;
+}

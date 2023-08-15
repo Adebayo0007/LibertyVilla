@@ -1,0 +1,26 @@
+﻿@page "/loginControl"
+@using System.Web;
+<AuthorizeView>
+    <Authorized>
+        <b>Hello, @context.User.Identity.Name!</b>
+        <a class="ml-md-auto btn btn-primary"
+           href="/logout?returnUrl=/"
+           target="_top">Logout</a>
+    </Authorized>
+    <NotAuthorized>
+        <a class="ml-md-auto btn btn-primary"
+           href="/Account/login"
+           target="_top">Login</a>
+       
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    string Username = "";
+    string Password = "";
+    private string encode(string param)
+    {
+        return HttpUtility.UrlEncode(param);
+    }
+
+}

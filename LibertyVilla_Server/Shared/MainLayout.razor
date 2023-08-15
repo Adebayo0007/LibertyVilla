@@ -2,7 +2,7 @@
 
 <PageTitle>LibertyVilla_Server</PageTitle>
 
-<div class="page">
+@*<div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -16,4 +16,23 @@
             @Body
         </article>
     </main>
+</div>*@
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <!-- BLAZOR COOKIE Auth Code (begin) -->
+            <LoginControl />
+            <!-- BLAZOR COOKIE Auth Code (end) -->
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
 </div>
+
+

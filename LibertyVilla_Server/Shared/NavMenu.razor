@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using System.Security.Claims;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">LibertyVilla_Server</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -30,10 +32,35 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="hotel-room">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Hotel Rooms
+            <NavLink class="nav-link" href="CallServerSide">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Call Server Side
             </NavLink>
         </div>
+        @if (UserClaims.FindFirstValue(ClaimTypes.Role) == "SuperAdmin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="hotel-room">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Hotel Rooms
+                </NavLink>
+            </div>
+        }
+        @if (UserClaims.FindFirstValue(ClaimTypes.Name) == null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/Account/login">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Login
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/logout?returnUrl=/">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Logout
+                </NavLink>
+            </div>
+            
+        }
     </nav>
 </div>
 
@@ -41,6 +68,13 @@
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private ClaimsPrincipal UserClaims { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        //for accessing claims
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        UserClaims = authState.User;
+    }
 
     private void ToggleNavMenu()
     {

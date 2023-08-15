@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Busine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{663F39B4-F9DA-4E63-871F-C911B5C8329E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibertyVilla_WebApi", "LibertyVilla_WebApi\LibertyVilla_WebApi.csproj", "{F3826FDD-07E0-491E-946B-2E06CC283ABE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibertyVilla.Client", "LibertyVilla\Client\LibertyVilla.Client.csproj", "{FCD333B6-CBA4-4149-8B24-8F8961765568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{663F39B4-F9DA-4E63-871F-C911B5C8329E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{663F39B4-F9DA-4E63-871F-C911B5C8329E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{663F39B4-F9DA-4E63-871F-C911B5C8329E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3826FDD-07E0-491E-946B-2E06CC283ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3826FDD-07E0-491E-946B-2E06CC283ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3826FDD-07E0-491E-946B-2E06CC283ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3826FDD-07E0-491E-946B-2E06CC283ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCD333B6-CBA4-4149-8B24-8F8961765568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD333B6-CBA4-4149-8B24-8F8961765568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD333B6-CBA4-4149-8B24-8F8961765568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD333B6-CBA4-4149-8B24-8F8961765568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

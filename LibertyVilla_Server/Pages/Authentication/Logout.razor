@@ -1,0 +1,31 @@
+﻿@page "/Account/Logout"
+@using LibertyVilla_Server.Service
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using Microsoft.AspNetCore.Authentication;
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime JSRunTime;
+
+
+<h3>Logout</h3>
+
+<button @onclick="LogoutUser">Logout</button>
+
+@code {
+    private async Task LogoutUser()
+    {
+        try
+        {
+            IHttpContextAccessor httpAccessor = new HttpContextAccessor();
+            await httpAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            NavigationManager.NavigateTo("/");
+
+        }
+        catch(Exception ex)
+        {
+            await JSRunTime.ToastrError(ex.Message);
+        }
+
+       
+    }
+}
