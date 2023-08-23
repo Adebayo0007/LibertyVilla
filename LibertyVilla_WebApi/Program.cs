@@ -50,6 +50,7 @@ namespace LibertyVilla_WebApi
             builder.Services.AddScoped<IHotelRoomRepository, HotelRoomRepository>();
             builder.Services.AddScoped<IHotelImageRepository, HotelImageRepository>();
             builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            builder .Services .AddScoped<IRoomOrderRepository, RoomOrderRepository>();
             builder.Services.AddScoped<IJWTAuthentication, JWTAuthentication>();
             builder.Services.AddRouting(option => option.LowercaseUrls = true);
             builder.Services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null)

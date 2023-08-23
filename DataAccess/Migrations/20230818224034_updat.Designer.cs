@@ -3,6 +3,7 @@ using System;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230818224034_updat")]
+    partial class updat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,12 +71,12 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2023, 8, 20, 8, 39, 34, 121, DateTimeKind.Local).AddTicks(3077),
+                            DateCreated = new DateTime(2023, 8, 18, 23, 40, 33, 867, DateTimeKind.Local).AddTicks(6780),
                             Email = "tijaniadebayoabdllahi@gmail.com",
                             Gender = "Male",
                             IsActive = true,
                             Name = "Adebayo Addullah",
-                            Password = "$2a$11$4xhp.w9ylXJb9yqInmNIfuLYb3sy5cimp7cl7S67B0/tntQRiwIGC",
+                            Password = "$2a$11$04Xe5zKbL6BhrDmIkgE8JOLAdaMQ78MG0vicy0O92nz/Zx5Fzf.8K",
                             PhoneNumber = "08087054632",
                             Role = "SuperAdmin"
                         });
@@ -185,8 +187,9 @@ namespace DataAccess.Migrations
                     b.Property<long>("TotalCost")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

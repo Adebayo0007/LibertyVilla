@@ -1,0 +1,66 @@
+﻿@page "/"
+@using Common;
+@using VillaClient.Shared.ViewModel;
+@using System.Text.Json;
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Home page</PageTitle>
+
+<EditForm Model="@HomeViewModel">
+<div class="hotel-room-container">
+    <div class="hotel-room-body"></div>
+    <div class="hotel-room-bottom">
+        <span></span>
+        <span class="model">
+            <span>
+                <span class="color"><span style="color: red;">No </span> of Night</span> &nbsp; &nbsp;
+                    <select @bind="HomeViewModel.NoOfNights" class="sel">
+                        @for(var i = 0; i <= 5; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                </select>
+            </span>  &nbsp;
+                <span><span class="color"> <span style="color: red;">Starting </span>Date</span><InputDate min="@DateTime.Now.ToString("yyyy-MM-dd")" @bind-Value="@HomeViewModel.StartDate"></InputDate></span>
+                <span><input @onclick="SubmitionHandller" class="submit-btn" type="submit" value="Submit"></span>
+        </span>
+        <span></span>
+    </div>
+</div>
+</EditForm>
+
+<div class="pix">
+    <div class="tit"> Our<span style="color: red;"> rooms</span></div>
+    <div class="tito">
+        <img src="./room1.jpg" alt=""><img src="./room2.jpg" alt=""><img src="./room3.jpg" alt=""><img src="./room4.jpg" alt="">
+    </div>
+
+</div>
+<div class="con">
+    <div class="pix">
+        <div class="tit"> Our<span style="color: red;"> motives</span></div>
+        <div class="txt">
+            We are happy you need to know what our motives are,one of our motive to create a room for relaxation and enjoyment,and as result of these we have prepared some amenities for our quests such as comfortable room,swimming pool,standard tennis court, bar, Dj performance every night 🎧, free wifi💻, constant electricity🔌, Library for those that love reading📖, qualified chefs 🍕, meeting of new people🥂, Room of different level🌟 and also our building/facilities are very nice🏡,all these are done to attain our motives and our guests never regret coming to us,so you can also give us a trial and see your experience being with us because seeing is believing.COME AND MEET NEW PEOPLE.
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    private HomeVM HomeViewModel { get; set; } = new HomeVM();
+    protected override async Task OnInitializedAsync()
+    {
+        // return base.OnInitializedAsync();
+    }
+   
+    private async Task SubmitionHandller()
+    {
+        HomeViewModel.EndDate = HomeViewModel.StartDate.AddDays(HomeViewModel.NoOfNights);
+        string datas = JsonSerializer.Serialize(HomeViewModel);
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Booking_View_Model, datas);
+        NavigationManager.NavigateTo($"rooms", true);
+    }
+}

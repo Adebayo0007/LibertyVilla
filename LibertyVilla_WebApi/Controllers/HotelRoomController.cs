@@ -22,9 +22,16 @@ namespace LibertyVilla_WebApi.Controllers
             var rooms = await _hotelRoomRepository.GetAllHotelRoom();
             return Ok(rooms);
         }
-        [HttpGet("GetHotelRoom/{roomId}")]
-        public async Task<IActionResult> GetHotelRoom([FromRoute] int? roomId)
+        [HttpGet("GetHotelRoom")]
+        public async Task<IActionResult> GetHotelRoom(DateTime checkinDate,DateTime checkoutDate)
         {
+            var rooms = await _hotelRoomRepository.GetAvailableHotelRoom(checkinDate,checkoutDate);
+            return Ok(rooms);
+        }
+        [HttpGet("GetHotelRoomDetails")]
+        public async Task<IActionResult> GetHotelRoomDetails(int? roomId, DateTime? checkinDate, DateTime? checkoutDate)
+        {
+
             if(roomId == null)
             {
                 return BadRequest(new ErrorModel()
@@ -35,7 +42,7 @@ namespace LibertyVilla_WebApi.Controllers
 
                 });
             }
-            var room = await _hotelRoomRepository.GetHotelRoom(roomId.Value);
+            var room = await _hotelRoomRepository.GetHotelRoom(roomId.Value, checkinDate, checkoutDate);
 
             if (room == null)
             {

@@ -1,0 +1,144 @@
+﻿@page "/rooms"
+@using Common;
+@using Microsoft.Extensions.Caching.Memory;
+@using Models;
+@using VillaClient.Client.Service.Iservice;
+@using VillaClient.Shared.ViewModel;
+@using System.Text.Json;
+@inject IJSRuntime JSRuntime
+@inject IRoomService RoomService;
+@inject IMemoryCache MemoryCache
+
+
+<PageTitle>Rooms</PageTitle>
+<div class="body">
+    <div class="hotel-bod">
+        <div class="hotel-room-cont">
+            <!-- content Starting -->
+    <EditForm Model="@HomeViewModel">
+            <div class="hotel-room-bottom">
+                <span></span>
+                <span class="model">
+                   
+                    <span><span class="color"> <span style="color: red;">Checkin </span>Date</span><InputDate min="@DateTime.Now.ToString("yyyy-MM-dd")" @bind-Value="@HomeViewModel.StartDate"></InputDate></span>
+                    <span><span class="color"> <span style="color: red;">Checkout </span>Date</span><InputDate style="color:antiquewhite" min="@DateTime.Now.ToString("yyyy-MM-dd")" @bind-Value="@HomeViewModel.EndDate" disabled></InputDate></span>
+                        <span>
+                            <span class="color"><span style="color: red;">No </span> of Night</span> &nbsp; &nbsp;
+                            <select @bind="HomeViewModel.NoOfNights" class="sel">
+                                @for (var i = 0; i <= 5; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </span>  &nbsp;
+                    <span><input @onclick="SubmitionHandller" class="submit-btn" type="submit" value="Update"></span>
+                </span>
+                <span></span>
+            </div>
+    </EditForm>
+            @foreach (var hotelRoom in HotelRooms)
+            {
+            <form class="hotel-room-con" action="">
+                <div class="item">
+                    <div class="fll">
+                        <img class="imm" src="./room1.jpg" alt="hotel room picture">
+                        <img class="imm" src="./room3.jpg" alt="hotel room picture">
+                         <img class="imm" src="./room2.jpg" alt="hotel room picture">
+                    </div>
+                    <div class="div">
+                            <div class="txx">@hotelRoom.Name</div>
+                        <div class="orr">
+                            @((MarkupString)hotelRoom.Details)
+                        </div>
+                    </div>
+                    <div class="divv">
+                        <div class="inn">
+                                @if (hotelRoom.IsBooked)
+                                {
+                                    <input disabled class="ff" style="border:none;outline:none;background-color:green;width:98%;color:white;" type="submit" value="Sold out">
+                                    @*<button disabled class="btn btn-secondary btn-block"> Sold Out </button>*@
+                                }
+                                else
+                                {
+                                    <a style="text-decoration:none;" class="in" href=@($"room-details/{hotelRoom.Id}")>
+                                      <input class="ff" style="border:none;outline:none;background-color:green;width:98%;color:white;" type="submit" value="Book"> 
+                                </a>
+                                }
+                        </div>
+                        <div class="orr">
+                                <div> max occupancy: <span>  @hotelRoom.Occupancy </span> adults</div>
+                                <div> villa Size <span> @hotelRoom.Sqft </span> sqrt</div>
+                                <div class="txx"> USD <span><u>  @((Convert.ToDouble(hotelRoom.RegularRate)*Convert.ToDouble(HomeViewModel.NoOfNights)).ToString("#,#.00;(#,#.00#)")) </u></span></div>
+                                <div> cost for <span>@HomeViewModel.NoOfNights</span> night</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            }
+
+        </div>
+    </div>
+
+</div>
+@code{
+    private dynamic Test { get; set; }
+    private HomeVM HomeViewModel { get; set; } = new HomeVM();
+    private IEnumerable<HotelRoomDto> HotelRooms { get; set; } = new List<HotelRoomDto>();
+    private string? StoredModel { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            if (await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Booking_View_Model) != null)
+            {
+                StoredModel = await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Booking_View_Model);
+                HomeVM datas = JsonSerializer.Deserialize<HomeVM>(StoredModel);
+                HomeViewModel = datas;
+            }
+            else
+            {
+                HomeViewModel.NoOfNights = 1;
+            }
+            await GetRooms();
+
+        }
+        catch(Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+
+    }
+    private async Task GetRooms()
+    {
+        await Task.Delay(5000);
+        try
+        {
+            if (!MemoryCache.TryGetValue("available_rooms", out IEnumerable<HotelRoomDto> response))
+            {
+                 response = await RoomService.GetRoom(HomeViewModel.StartDate, HomeViewModel.EndDate);
+                HotelRooms = response;
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // Cache for 10 minutes
+                    };
+
+                MemoryCache.Set("CacheKey_Products", response, cacheEntryOptions);
+            }
+            HotelRooms = response;
+        }
+         catch(Exception e)
+        {
+            throw;
+        }
+    }
+
+    private async Task SubmitionHandller()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", SD.Booking_View_Model);
+        HomeViewModel.EndDate = HomeViewModel.StartDate.AddDays(HomeViewModel.NoOfNights);
+        string datas = JsonSerializer.Serialize(HomeViewModel);
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Booking_View_Model, datas);
+        await GetRooms(); 
+    }
+}

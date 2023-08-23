@@ -3,6 +3,7 @@ using System;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230818221946_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,12 +71,12 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2023, 8, 20, 8, 39, 34, 121, DateTimeKind.Local).AddTicks(3077),
+                            DateCreated = new DateTime(2023, 8, 18, 23, 19, 46, 137, DateTimeKind.Local).AddTicks(8715),
                             Email = "tijaniadebayoabdllahi@gmail.com",
                             Gender = "Male",
                             IsActive = true,
                             Name = "Adebayo Addullah",
-                            Password = "$2a$11$4xhp.w9ylXJb9yqInmNIfuLYb3sy5cimp7cl7S67B0/tntQRiwIGC",
+                            Password = "$2a$11$GRHHiwxiaICLlkgF.p1Am.Jpxuu37my//vz7BqV4ng7YMffD72eVi",
                             PhoneNumber = "08087054632",
                             Role = "SuperAdmin"
                         });
@@ -178,15 +180,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<long>("TotalCost")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
