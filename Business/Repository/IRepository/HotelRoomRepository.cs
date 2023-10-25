@@ -116,6 +116,7 @@ namespace Business.Repository.IRepository
                 using (var hotelRoom = _db.HotelRooms.Include(h => h.HotelRoomImages).SingleOrDefaultAsync(h => h.Id == roomId))
                 {
                     var hotelRoomDto = _mapper.Map<HotelRoom, HotelRoomDto>(await hotelRoom);
+                    
                     var booked = await IsRoomBooked(hotelRoomDto.Id, startDate.Value, endDate.Value);
                     if (booked)
                     {

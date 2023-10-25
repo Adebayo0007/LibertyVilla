@@ -20,7 +20,7 @@ namespace DataAccess.Data
         public string Password { get; set; } = default!;
         [Required]
         public string Role { get; set; }
-        public string Gender { get; set; } = default!;
+        public string? Gender { get; set; } 
         [Required]
         public string PhoneNumber { get; set; } = default!;
         public bool IsActive { get; set; } = true;

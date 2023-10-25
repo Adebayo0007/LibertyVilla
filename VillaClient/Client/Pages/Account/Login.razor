@@ -1,0 +1,62 @@
+﻿@page "/login"
+@using Common;
+@using Models;
+@using System.Text.Json;
+@using VillaClient.Client.Service.Iservice;
+@inject IJSRuntime JSRuntime
+@inject IAuthenticationService AuthenticationService;
+@inject NavigationManager NavigationManager;
+<PageTitle>Login</PageTitle>
+<EditForm Model="LoginModel" OnValidSubmit="HandleLoginCreation" class="details-dat">
+    <DataAnnotationsValidator />
+    <div>
+        <div style="color: rgb(255, 145, 0);margin: 2vh 0%;">Email</div>
+        <div>
+            <InputText @bind-Value="LoginModel.Email" style="height: 4vh;border-radius: 5px;outline: none;width: 95%;"></InputText>
+            <ValidationMessage For="(()=>LoginModel.Email)"></ValidationMessage>
+        </div>
+    </div>
+    <div>
+        <div style="color: rgb(255, 145, 0);margin: 2vh 0%;">Email</div>
+        <div>
+            <InputText @bind-Value="LoginModel.Password" style="height: 4vh;border-radius: 5px;outline: none;width: 95%;"></InputText>
+            <ValidationMessage For="(()=>LoginModel.Password)"></ValidationMessage>
+        </div>
+    </div>
+    <div class="checkoutNow">
+
+        <input style="border: none;outline: none;font-weight: bolder;color: white;background-color: rgb(104, 167, 10);" type="submit" value="Submit">
+    </div>
+</EditForm>
+
+@code {
+    public LoginRequestModel LoginModel { get; set; } = new LoginRequestModel();
+    protected override async Task OnInitializedAsync()
+    {
+        LoginModel = new LoginRequestModel();
+    }
+    private async Task HandleLoginCreation()
+    {
+        try
+        {
+           
+
+            var response = await AuthenticationService.Login(LoginModel);
+            if (response != null)
+            {
+                string result = JsonSerializer.Serialize(response);
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Login_Details, result);
+                NavigationManager.NavigateTo($"rooms", true);
+            }
+            else
+            {
+                throw new ArgumentException(response.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
+}

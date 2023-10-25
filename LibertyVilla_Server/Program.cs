@@ -1,10 +1,12 @@
 using Business.Repository.IRepository;
+using Common;
 using DataAccess.Data;
 using LibertyVilla_Server.Data;
 using LibertyVilla_Server.Service;
 using LibertyVilla_Server.Service.IService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 
 namespace LibertyVilla_Server
 {
@@ -42,6 +44,7 @@ namespace LibertyVilla_Server
             builder.Services.AddScoped<HttpContextAccessor>();
             builder.Services.AddHttpClient();
             builder.Services.AddScoped<HttpClient>();
+           
 
 
             var app = builder.Build();
@@ -52,10 +55,7 @@ namespace LibertyVilla_Server
 
             app.UseRouting();
             // BLAZOR COOKIE Auth Code (begin)
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseAuthentication();
             // BLAZOR COOKIE Auth Code (end)
             app.UseAuthentication();
             app.UseAuthorization();

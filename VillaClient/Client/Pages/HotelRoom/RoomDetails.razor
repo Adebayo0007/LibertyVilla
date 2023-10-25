@@ -8,6 +8,8 @@
 @inject IJSRuntime JSRuntime
 @inject IRoomService RoomService;
 @inject IRoomOrderDetailsService RoomOrderDetailsService;
+@inject IStripePaymentService StripePaymentService;
+@inject NavigationManager NavigationManager;
 
 <PageTitle>Room Details</PageTitle>
 <div class="detail-body">
@@ -40,7 +42,9 @@
             }
             else
             {
-                <h4 style="color:white;font-style:italic">Loading your room details, please wait...</h4>
+                <div id="load-body">
+                    <div class="loading"></div>
+                </div>
             }
         </div>
     </div>
@@ -109,8 +113,8 @@
                 </div>
                 <div class="checkoutNow">
                         @if (HotelBooking.OrderDetails.HotelRoomDto.IsBooked)
-                        {   
-                          <input disabled style="border: none;outline: none;font-weight: bolder;color: white;background-color: rgb(104, 167, 10);" type="submit" value="Sold out">
+                        {
+                            <input disabled style="border: none;outline: none;font-weight: bolder;color: white;background-color: rgb(104, 167, 10);" type="submit"  value="Sold out">
                         }
                         else
                         {       
@@ -121,7 +125,9 @@
             }
             else
             {
-                <h4 style="color:white;font-style:italic">Please wait...</h4>
+                <div id="load-body">
+                    <div class="loading"></div>
+                </div>
             }
         </div>
     </div>
@@ -172,8 +178,6 @@
                     HotelBooking.OrderDetails.CheckOutDate = DateTime.Now.AddDays(1);
                     HotelBooking.OrderDetails.HotelRoomDto.TotalDays = 1;
                     TotalAmount = HotelBooking.OrderDetails.HotelRoomDto.RegularRate;
-
-
                 }
 
             }
@@ -198,23 +202,26 @@
     {
         try
         {
-
-            //await Task.Delay(5000);
             HotelBooking.OrderDetails.RoomId = Id.Value;
-            HotelBooking.OrderDetails.UserId = 1;
             HotelBooking.OrderDetails.CheckInDate = HotelBooking.OrderDetails.CheckInDate;
-           // HotelBooking.OrderDetails.CheckInDate = HotelBooking.OrderDetails.CheckOutDate;
-            //HotelBooking.OrderDetails.TotalCost = Convert.ToInt64(Rate * HotelBooking.OrderDetails.HotelRoomDto.TotalDays);
+            HotelBooking.OrderDetails.TotalCost = Convert.ToInt64(Rate * HotelBooking.OrderDetails.HotelRoomDto.TotalDays);
+
             var response = await RoomOrderDetailsService.CreateOrder(HotelBooking.OrderDetails);
-            if (response.Id != null)
+            if (response != null)
             {
                 string result = JsonSerializer.Serialize(response);
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Booking_Order_Details, result);
+                var payStack = new PaystackDto() { RoomId = response.Id, Amount = HotelBooking.OrderDetails.TotalCost, Email = HotelBooking.OrderDetails.Email };
+                string result1 = JsonSerializer.Serialize(payStack);
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Paystack_Order_Details, result1);
+               //await JSRuntime.InvokeVoidAsync("PaystackFunctions.initiatePayment", "pk_test_fe5a54565a0b6f9a04eb69e5ce395810ea27a2bc", HotelBooking.OrderDetails.TotalCost, "ade@gmail.com");
+               // await Task.Delay(5000);
+               // NavigationManager.NavigateTo($"transactionSuccessful", true);
+                NavigationManager.NavigateTo($"paystack", true);
             }
             else
             {
                 throw new ArgumentException(response.Status);
-                //throw new ArgumentException("that is it");
             }
         }
         catch(Exception ex)
@@ -222,4 +229,43 @@
             throw new ArgumentException(ex.Message);
         }
     }
+    private async Task Handle_CheckOut()
+    {
+        try
+        {
+            var paymentDto = new StripePaymentDto()
+                {
+                    Amount = Convert.ToInt64(Rate * HotelBooking.OrderDetails.HotelRoomDto.TotalDays) * 100, //converting to cent
+                    ProductName = HotelBooking.OrderDetails.HotelRoomDto.Name,
+                    ReturnUrl = "/room-details" + Id
+                };
+
+            var result = await StripePaymentService.CheckOut(paymentDto);
+            HotelBooking.OrderDetails.StripeSessionId = result.Data.ToString();
+            HotelBooking.OrderDetails.RoomId = Id.Value;
+            HotelBooking.OrderDetails.CheckInDate = HotelBooking.OrderDetails.CheckInDate;
+            HotelBooking.OrderDetails.TotalCost = Convert.ToInt64(Rate * HotelBooking.OrderDetails.HotelRoomDto.TotalDays);
+            
+
+            var response = await RoomOrderDetailsService.CreateOrder(HotelBooking.OrderDetails);
+            if (response != null)
+            {
+                string res = JsonSerializer.Serialize(response);
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Booking_Order_Details, res);
+                await JSRuntime.InvokeVoidAsync("redirectToCheckout", SD.Booking_Order_Details, result.Data.ToString());
+                //NavigationManager.NavigateTo($"transactionSuccessful", true);
+            }
+            else
+            {
+                throw new ArgumentException(response.Status);
+            }
+
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+
 }

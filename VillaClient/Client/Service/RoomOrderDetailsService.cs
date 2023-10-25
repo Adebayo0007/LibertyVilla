@@ -1,9 +1,9 @@
-﻿using Models;
+﻿using Microsoft.JSInterop;
+using Models;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
+using Refit;
 using System.Text;
+//using Microsoft.JSInterop.IJSRuntime;
 using VillaClient.Client.Service.Iservice;
 
 namespace VillaClient.Client.Service
@@ -11,15 +11,27 @@ namespace VillaClient.Client.Service
     public class RoomOrderDetailsService : IRoomOrderDetailsService
     {
         private readonly HttpClient _client;
-        public RoomOrderDetailsService(HttpClient client)
+        private readonly IJSRuntime _jsRuntime;
+        public RoomOrderDetailsService(HttpClient client, IJSRuntime jsRuntime)
         {
             _client = client;
+            _jsRuntime = jsRuntime;
         }
 
         public async Task<RoomOrderDetailDto> CreateOrder(RoomOrderDetailDto roomOrderDetailDto)
         {
-           // _client.DefaultRequestHeaders.Accept.Clear();
-            //_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+           /*try
+            {
+                 IRefitRequest apiService = RestService.For<IRefitRequest>("https://localhost:7086");
+                 RoomOrderDetailDto refitResponse = await apiService.CreateOrder(roomOrderDetailDto);
+                return refitResponse;
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }*/
+            
+
             var content = JsonConvert.SerializeObject(roomOrderDetailDto);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/roomorder/createorder", bodyContent);
@@ -27,7 +39,10 @@ namespace VillaClient.Client.Service
             var result = JsonConvert.DeserializeObject<RoomOrderDetailDto>(contentTemp);
 
             if (!response.IsSuccessStatusCode)
-            { 
+            {
+               // await _jsRuntime.InvokeVoidAsync("PaystackFunctions.initiatePayment", "pk_test_fe5a54565a0b6f9a04eb69e5ce395810ea27a2bc", roomOrderDetailDto.TotalCost, "ade@gmail.com");
+                //PaystackFunctions.initiatePayment("pk_test_fe5a54565a0b6f9a04eb69e5ce395810ea27a2bc", roomOrderDetailDto.TotalCost, "ade@gmail.com");
+
                 return new RoomOrderDetailDto {Status = response.RequestMessage.ToString()} ;
             }
             else

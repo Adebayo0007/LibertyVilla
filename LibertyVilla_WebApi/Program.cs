@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Common;
+using Stripe;
+using NLog;
+using System.IO;
 //using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace LibertyVilla_WebApi
@@ -117,6 +120,9 @@ namespace LibertyVilla_WebApi
                     };
 
                 });
+
+            StripeConfiguration.ApiKey = SD.Stripe_Api_Secrete_key;
+            LogManager.Setup().LoadConfigurationFromFile(SD.NLog_WebApi_Config_File);
 
             var app = builder.Build();
             app.Logger.LogInformation("Application starting...");

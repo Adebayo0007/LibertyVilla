@@ -22,6 +22,6 @@ namespace Models
         public int TotalDays { get; set; }
         public bool IsBooked { get; set; } = false;
         public virtual ICollection<HotelRoomImageDto> HotelRoomImages { get; set; }
-        public List<string> ImagesUrls { get; set; }
+        public List<string>? ImagesUrls { get; set; } 
     }
 }

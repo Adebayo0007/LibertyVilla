@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\app.js" />
+    <Content Remove="wwwroot\js\index.js" />
+    <Content Remove="wwwroot\stripe.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\stripe.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +22,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.16" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.3" />
+    <PackageReference Include="Paystack.Net" Version="1.1.0" />
+    <PackageReference Include="Refit" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\js\app.js" />
+    <None Include="wwwroot\js\index.js" />
+    <None Include="wwwroot\stripe.js" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,50 @@
 ﻿@page "/transactionSuccessful"
-<PageTitle>Transaction</PageTitle>
+@using Common;
+@using Models;
+@using System.Text.Json;
+@inject IJSRuntime JSRuntime
+<PageTitle>Transaction Successful</PageTitle>
 
- <div class="transaction-success">
-   <div class="one"><span class="for">Transaction Successful</span></div>
-   <div class="two"> <img src="./room3.jpg" alt="successful image transaction"> </div>
-   <div class="three"><span class="for">You have booked room number 2</span></div>
- </div>   
+@if(Datas.RoomId <= 0 )
+{
+    <div id="load-body">
+        <div class="loading"></div>
+    </div>
+}
+else
+{
+    
+    <div class="transaction-success">
+       <div class="one"><span class="for">Transaction Successful</span></div>
+       <div class="two"> <img src="./room3.jpg" alt="successful image transaction"> </div>
+        <div class="three"><span class="for">You have booked room number @Datas.RoomId </span></div>
+     </div>   
+}
 
 @code {
+    private RoomOrderDetailDto Datas = new RoomOrderDetailDto();
+    protected override async  Task OnInitializedAsync()
+    {
+        try
+        {
+            if (await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Booking_Order_Details) != null) 
+            {
+                var response = await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Booking_Order_Details);
+                Datas = JsonSerializer.Deserialize<RoomOrderDetailDto>(response);
+                await Task.Delay(5000);
+                await JSRuntime.InvokeAsync<string>("localStorage.removeItem", SD.Booking_Order_Details);
+            }
+            else
+            {
+                Datas = new RoomOrderDetailDto();
+            }
+
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+        
+    }
 
 }

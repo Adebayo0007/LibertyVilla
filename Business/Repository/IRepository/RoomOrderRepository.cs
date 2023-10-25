@@ -76,9 +76,20 @@ namespace Business.Repository.IRepository
 
       
 
-        public Task<RoomOrderDetailDto> MarkPaymentSuccessful(int id)
+        public async Task<RoomOrderDetailDto> MarkPaymentSuccessful(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var roomOrder = await _db.RoomOrderDetails.FirstOrDefaultAsync(r => r.Id == id);
+                roomOrder.IsPaymentsuccessful = true;
+                _db.Update(roomOrder);
+                await _db.SaveChangesAsync();
+                return _mapper.Map<RoomOrderDetail, RoomOrderDetailDto>(roomOrder);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Task<bool> UpdateOrderStatus(int roomOrderId, string status)

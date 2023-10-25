@@ -9,10 +9,20 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="VillaClient.Client.styles.css" rel="stylesheet" />
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        const paystackPublicKey = "pk_test_fe5a54565a0b6f9a04eb69e5ce395810ea27a2bc";
+    </script>
+
+
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <div style="background-color:black;" id="app">
+        <div id="load-body">
+            <div class="loading"></div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -20,7 +30,23 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script src="payment.js"></script>
+
+    <!--<script src="/VillaClient.Client/wwwroot/payment.js"></script>-->
+
     <script src="./js/index.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js" integrity="sha512-ToL6UYWePxjhDQKNioSi4AyJ5KkRxY+F1+Fi7Jgh0Hp5Kk2/s8FD7zusJDdonfe5B00Qw+B8taXxF6CFLnqNCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>-->
+    <script src="stripe.js"></script>
+    <script src="./js/index.js"></script>
+    <!--<script src="./stripe.js"></script>-->
 </body>
 
 </html>

@@ -23,6 +23,7 @@ namespace VillaClient.Client
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IRoomOrderDetailsService, RoomOrderDetailsService>();
+            builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 
             await builder.Build().RunAsync();
         }

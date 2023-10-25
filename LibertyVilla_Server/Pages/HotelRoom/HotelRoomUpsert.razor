@@ -18,100 +18,111 @@
     <div class="col-md-12">
         <div class="card">
             <div class="class-body">
-               <EditForm Model="@HotelRoomModel" OnValidSubmit="HandleHotelRoomUpsert">
-                   <DataAnnotationsValidator/>
-                    @*<ValidationSummary/>*@
-                   <div class="form-group m-lg-3" >
-                       <label>Name</label>
-                       <InputText @bind-Value="HotelRoomModel.Name" class="form-control"></InputText>
-                        <ValidationMessage For ="(()=>HotelRoomModel.Name)"></ValidationMessage>
-                   </div>
-                    <div class="form-group m-lg-3">
-                        <label>Occupancy</label>
-                        <InputNumber @bind-Value="HotelRoomModel.Occupancy" class="form-control"></InputNumber>
-                        <ValidationMessage For="(()=>HotelRoomModel.Occupancy)"></ValidationMessage>
+              @if(IsInProcessing)
+                {
+                    <div id="load-body">
+                        <div class="loading"></div>
                     </div>
-                    <div class="form-group m-lg-3">
-                        <label>Rate</label>
-                        <InputNumber @bind-Value="HotelRoomModel.RegularRate" class="form-control"></InputNumber>
-                        <ValidationMessage For="(()=>HotelRoomModel.RegularRate)"></ValidationMessage>
-                    </div>
-                    <div class="form-group m-lg-3">
-                        <label>Sq ft.</label>
-                        <InputText @bind-Value="HotelRoomModel.Sqft" class="form-control"></InputText>
-                        <ValidationMessage For="(()=>HotelRoomModel.Sqft)"></ValidationMessage>
-                    </div>
-                    <div class="form-group m-lg-3" style="height:250px">
-                        <label>Details</label>
-                        @*<InputTextArea @bind-Value="HotelRoomModel.Details" class="form-control"></InputTextArea>*@
-                        <BlazoredTextEditor @ref="@QuillHtml" Placeholder="Please enter room details">
-                            <ToolbarContent>
-                                <select class="ql-header">
-                                    <option selected=""></option>
-                                    <option value="1"></option>
-                                    <option value="2"></option>
-                                    <option value="3"></option>
-                                    <option value="4"></option>
-                                    <option value="5"></option>
-                                </select>
-                                <span class="ql-formats">
-                                    <button class="ql-bold"></button>
-                                    <button class="ql-italic"></button>
-                                    <button class="ql-underline"></button>
-                                    <button class="ql-strike"></button>
-                                </span>
-                                <span class="ql-formats">
-                                    <select class="ql-color"></select>
-                                    <select class="ql-background"></select>
-                                </span>
-                                <span class="ql-formats">
-                                    <button class="ql-list" value="ordered"></button>
-                                    <button class="ql-list" value="bullet"></button>
-                                </span>
-                                <span class="ql-formats">
-                                    <button class="ql-link"></button>
-                                </span>
-                            </ToolbarContent>
-                            <EditorContent>
-                              
-                            </EditorContent>
-                            </BlazoredTextEditor>
-                        <ValidationMessage For="(()=>HotelRoomModel.Details)"></ValidationMessage>
-                    </div>
-                    <div class="form-group m-lg-3" style="padding-top:70px;">
-                        <InputFile OnChange="HandleImageUplaod" multiple></InputFile>
-                        <div>
-                            <div class="division">
-                                @if(IsImageUploadProcessStarted)
-                                {
-                                    <div class="col-md-12">
-                                        <span><i class="fa fa-spin fa-spinner"></i>Please wait... Images are uploading...</span>
-                                    </div>
-                                }
-                                @if(HotelRoomModel.ImagesUrls != null && HotelRoomModel.ImagesUrls.Count > 0)
-                            {
-                                int serial = 1;
-                                
-                                foreach (var roomImage in HotelRoomModel.ImagesUrls)
-                                {
-                                    <div class="col-md-2 mt-3">
-                                        <div class="room-image" style="background: url('@roomImage') 50% 50%">
-                                          <span class="room-image-title">@serial</span>
-                                        </div>
-                                    <button type="button" @onclick="() => DeletePhoto(roomImage)" class="btn btn-outline-danger btn-block mt-4">Delete</button>
-                                    </div>
-                                    serial++;
-                                }
-                               
-                            }
+                }
+                else
+                {
+
+                        <EditForm Model="@HotelRoomModel" OnValidSubmit="HandleHotelRoomUpsert">
+                            <DataAnnotationsValidator/>
+                            @*<ValidationSummary/>*@
+                            <div class="form-group m-lg-3" >
+                                <label>Name</label>
+                                <InputText @bind-Value="HotelRoomModel.Name" class="form-control"></InputText>
+                                <ValidationMessage For ="(()=>HotelRoomModel.Name)"></ValidationMessage>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group m-lg-3">
-                        <button class="btn btn-primary">@Tittle Room</button>
-                       <NavLink href="hotel-room" class="btn btn-secondary">Back to Index</NavLink>
-                    </div>
-               </EditForm>
+                            <div class="form-group m-lg-3">
+                                <label>Occupancy</label>
+                                <InputNumber @bind-Value="HotelRoomModel.Occupancy" class="form-control"></InputNumber>
+                                <ValidationMessage For="(()=>HotelRoomModel.Occupancy)"></ValidationMessage>
+                            </div>
+                            <div class="form-group m-lg-3">
+                                <label>Rate</label>
+                                <InputNumber @bind-Value="HotelRoomModel.RegularRate" class="form-control"></InputNumber>
+                                <ValidationMessage For="(()=>HotelRoomModel.RegularRate)"></ValidationMessage>
+                            </div>
+                            <div class="form-group m-lg-3">
+                                <label>Sq ft.</label>
+                                <InputText @bind-Value="HotelRoomModel.Sqft" class="form-control"></InputText>
+                                <ValidationMessage For="(()=>HotelRoomModel.Sqft)"></ValidationMessage>
+                            </div>
+                            <div class="form-group m-lg-3" style="height:250px">
+                                <label>Details</label>
+                                @*<InputTextArea @bind-Value="HotelRoomModel.Details" class="form-control"></InputTextArea>*@
+                                <BlazoredTextEditor @ref="@QuillHtml" Placeholder="Please enter room details">
+                                    <ToolbarContent>
+                                        <select class="ql-header">
+                                            <option selected=""></option>
+                                            <option value="1"></option>
+                                            <option value="2"></option>
+                                            <option value="3"></option>
+                                            <option value="4"></option>
+                                            <option value="5"></option>
+                                        </select>
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <select class="ql-color"></select>
+                                            <select class="ql-background"></select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered"></button>
+                                            <button class="ql-list" value="bullet"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-link"></button>
+                                        </span>
+                                    </ToolbarContent>
+                                    <EditorContent>
+
+                                    </EditorContent>
+                                </BlazoredTextEditor>
+                                <ValidationMessage For="(()=>HotelRoomModel.Details)"></ValidationMessage>
+                            </div>
+                            <div class="form-group m-lg-3" style="padding-top:70px;">
+                                <InputFile OnChange="HandleImageUplaod" multiple></InputFile>
+                                <div>
+                                    <div class="division">
+                                        @if (IsImageUploadProcessStarted)
+                                        {
+                                            <div class="col-md-12">
+                                                <span><i class="fa fa-spin fa-spinner"></i>Please wait... Images are uploading...</span>
+                                            </div>
+                                        }
+                                        @if (HotelRoomModel.ImagesUrls != null && HotelRoomModel.ImagesUrls.Count > 0)
+                                        {
+                                            int serial = 1;
+
+                                            foreach (var roomImage in HotelRoomModel.ImagesUrls)
+                                            {
+                                                <div class="col-md-2 mt-3">
+                                                    <div class="room-image" style="background: url('@roomImage') 50% 50%">
+                                                        <span class="room-image-title">@serial</span>
+                                                    </div>
+                                                    <button type="button" @onclick="() => DeletePhoto(roomImage)" class="btn btn-outline-danger btn-block mt-4">Delete</button>
+                                                </div>
+                                                serial++;
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group m-lg-3">
+                                <button class="btn btn-primary">@Tittle Room</button>
+                                <NavLink href="hotel-room" class="btn btn-secondary">Back to Index</NavLink>
+                            </div>
+                        </EditForm>
+                }
+                
             </div>
         </div>
     </div>
@@ -120,6 +131,7 @@
 @code {
     [Parameter]
     public int? Id { get; set; }
+    private bool IsInProcessing { get; set; } = false;
     private HotelRoomDto HotelRoomModel { get; set; } = new HotelRoomDto();
     private string Tittle { get; set; } = "Create";
     private HotelRoomImageDto RoomImage { get; set; } = new HotelRoomImageDto();
@@ -129,20 +141,32 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(Id != null)
+        try
         {
-            //Update
-            Tittle = "Update";
-            HotelRoomModel = await HotelRoomRepository.GetHotelRoom(Id.Value);
-            if (HotelRoomModel?.HotelRoomImages != null)
+            if(Id != null)
             {
-                HotelRoomModel.ImagesUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList();
-            }  
+                    //Update
+                    Tittle = "Update";
+                    IsInProcessing = true;
+                    HotelRoomModel = await HotelRoomRepository.GetHotelRoom(Id.Value);
+                    if (HotelRoomModel?.HotelRoomImages != null)
+                    {
+                        HotelRoomModel.ImagesUrls = HotelRoomModel.HotelRoomImages.Select(u => u.RoomImageUrl).ToList();
+                    }
+                    IsInProcessing = false;
+           
+            }
+            else
+            {
+                //Create
+                IsInProcessing = true;
+                HotelRoomModel = new HotelRoomDto();
+                IsInProcessing = false;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            //Create
-            HotelRoomModel = new HotelRoomDto();
+            await JSRunTime.ToastrError(ex.Message);
         }
     }
     protected async override Task OnAfterRenderAsync(bool firstRender)

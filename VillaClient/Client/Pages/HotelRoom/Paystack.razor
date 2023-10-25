@@ -1,0 +1,60 @@
+﻿@page "/paystack"
+@using Common;
+@using Models;
+@using System.Text.Json;
+
+@inject IJSRuntime JSRuntime
+
+<h3 style="color:white"><span style="color:red;"> Payment</span> <span style="color:white;">Page</span></h3>
+
+<form style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2vh" @onsubmit="SubmitPaymentForm">
+    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2vh;background-color:antiquewhite;width:35vw;padding:4vh 3vw;border-radius:15px;">
+        <div style="display:flex;justify-content:center;"> <img src="./property3.jpg" alt="hotel image" width="40%" height="50%"></div>
+        <div>Email: <input type="email" @bind="Datas.Email" placeholder="Email Address" readonly/></div>
+        <div>Amount: <input type="number" @bind="Datas.Amount" placeholder="Amount" readonly /></div>
+        <div><button type="submit">Proceed</button></div>
+    </div>
+    
+</form>
+
+
+@code {
+    private PaystackDto Datas = new PaystackDto();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Paystack_Order_Details) != null)
+            {
+                var response = await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Paystack_Order_Details);
+                Datas = JsonSerializer.Deserialize<PaystackDto>(response);
+                await Task.Delay(5000);
+                //await JSRuntime.InvokeAsync<string>("localStorage.removeItem", SD.Booking_Order_Details);
+            }
+            else
+            {
+                Datas = new PaystackDto();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+
+    }
+
+    private async Task SubmitPaymentForm()
+    {
+        try
+        {
+            // Call the JavaScript function to initiate payment
+            await JSRuntime.InvokeVoidAsync("payWithPaystack", Datas.Amount, Datas.Email, Datas.RoomId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+}

@@ -84,4 +84,21 @@ a, .btn-link {
     display: flex;
     gap: 1.5vw;
 }
+#load-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Inline styling for the loading animation */
+.loading {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
 

@@ -1,15 +1,17 @@
 ﻿@page "/hotel-room"
 @using Business.Repository.IRepository;
 @using LibertyVilla_Server.Service.IService;
+@using Microsoft.Extensions.Caching.Memory;
 @using Models;
 @using System.Web;
 @using System.Security.Claims;
+@using NLog;
 @inject IHotelRoomRepository HotelRoomRepository;
 @inject IJSRuntime JSRunTime;
 @inject IFileUpload FileUpload
-@*@inject AuthenticationStateProvider AuthenticationStateProvider*@
 @inject NavigationManager NavigationManager;
-@*@attribute [Authorize(Roles = $"SuperAdmin")]*@
+@inject IMemoryCache MemoryCache;
+ 
 
 <div class="row mt-4">
     <div class="col-8">
@@ -75,6 +77,28 @@
     //private ClaimsPrincipal UserClaims { get; set; }
     protected override async Task OnInitializedAsync()
     {
+       // logger = LogManager.GetCurrentClassLogger();
+
+        try
+        {
+            if (!MemoryCache.TryGetValue("Hotel_Room_List", out IEnumerable<HotelRoomDto> response))
+            {
+                response = await HotelRoomRepository.GetAllHotelRoom();
+                HotelRooms = response;
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // Cache for 10 minutes
+                    };
+
+                MemoryCache.Set("Hotel_Room_List", response, cacheEntryOptions);
+            }
+            HotelRooms = response;
+        }
+        catch (Exception e)
+        {
+            throw;
+        }
+
         HotelRooms = await HotelRoomRepository.GetAllHotelRoom();
 
         //for accessing claims
@@ -93,10 +117,13 @@
         if(isConfirmed && DeleteRoomId != null)
         {
             HotelRoomDto hotelRoom = await HotelRoomRepository.GetHotelRoom(DeleteRoomId.Value);
-            foreach(var image in hotelRoom.HotelRoomImages)
+            if (hotelRoom.HotelRoomImages.Count > 0)
             {
-                var imageName = image.RoomImageUrl.Replace($"{NavigationManager.BaseUri}RoomImages/", "");
-                FileUpload.DeleteFile(imageName);
+                foreach (var image in hotelRoom.HotelRoomImages)
+                {
+                    var imageName = image.RoomImageUrl.Replace($"{NavigationManager.BaseUri}RoomImages/", "");
+                    FileUpload.DeleteFile(imageName);
+                }
             }
             await HotelRoomRepository.DeleteHotelRoom(DeleteRoomId.Value);
             await JSRunTime.ToastrSuccess("Hotel room was deleted successfully");

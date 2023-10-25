@@ -45,6 +45,7 @@ namespace LibertyVilla_Server.Pages.HotelRoom
             try
             {
                 var userDetail = await _applicationUserRepository.GetUserByEmail(paramUsername);
+                //var existByPassword = BCrypt.Net.BCrypt.Verify(paramPassword, userDetail?.Password);
                 var existByPassword = BCrypt.Net.BCrypt.Verify(paramPassword, userDetail?.Password);
                 if (userDetail == null || existByPassword == false)
                     throw new ArgumentNullException(nameof(LoginRequestModel));

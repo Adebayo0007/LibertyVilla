@@ -18,8 +18,8 @@ namespace Models
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; } = default!;
         public string? Role { get; set; }
-        [Required(ErrorMessage = "Gender is required")]
-        public string Gender { get; set; } = default!;
+        //[Required(ErrorMessage = "Gender is required")]
+        public string? Gender { get; set; } 
         [Required(ErrorMessage = "Phone number is required")]
         public string? PhoneNumber { get; set; } = default!;
         public string? RefreshToken { get; set; }

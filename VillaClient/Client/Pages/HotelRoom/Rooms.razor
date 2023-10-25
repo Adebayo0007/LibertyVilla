@@ -5,9 +5,9 @@
 @using VillaClient.Client.Service.Iservice;
 @using VillaClient.Shared.ViewModel;
 @using System.Text.Json;
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JSRunTime;
 @inject IRoomService RoomService;
-@inject IMemoryCache MemoryCache
+@inject IMemoryCache MemoryCache;
 
 
 <PageTitle>Rooms</PageTitle>
@@ -36,6 +36,14 @@
                 <span></span>
             </div>
     </EditForm>
+            @if (HotelRooms.Count() <= 0)
+            {
+                <div id="load-body">
+                    <div class="loading"></div>
+                </div>
+            }
+            else
+            {
             @foreach (var hotelRoom in HotelRooms)
             {
             <form class="hotel-room-con" action="">
@@ -75,6 +83,7 @@
                 </div>
             </form>
             }
+            }
 
         </div>
     </div>
@@ -90,9 +99,10 @@
 
         try
         {
-            if (await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Booking_View_Model) != null)
+            if (await JSRunTime.InvokeAsync<string>("localStorage.getItem", SD.Booking_View_Model) != null)
             {
-                StoredModel = await JSRuntime.InvokeAsync<string>("localStorage.getItem", SD.Booking_View_Model);
+                await JSRunTime.ToastrSuccess("Thank you all");
+                StoredModel = await JSRunTime.InvokeAsync<string>("localStorage.getItem", SD.Booking_View_Model);
                 HomeVM datas = JsonSerializer.Deserialize<HomeVM>(StoredModel);
                 HomeViewModel = datas;
             }
@@ -111,10 +121,10 @@
     }
     private async Task GetRooms()
     {
-        await Task.Delay(5000);
+       
         try
         {
-            if (!MemoryCache.TryGetValue("available_rooms", out IEnumerable<HotelRoomDto> response))
+            if (!MemoryCache.TryGetValue("Available_Rooms", out IEnumerable<HotelRoomDto> response))
             {
                  response = await RoomService.GetRoom(HomeViewModel.StartDate, HomeViewModel.EndDate);
                 HotelRooms = response;
@@ -123,7 +133,7 @@
                         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // Cache for 10 minutes
                     };
 
-                MemoryCache.Set("CacheKey_Products", response, cacheEntryOptions);
+                MemoryCache.Set("Available_Rooms", response, cacheEntryOptions);
             }
             HotelRooms = response;
         }
@@ -135,10 +145,10 @@
 
     private async Task SubmitionHandller()
     {
-        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", SD.Booking_View_Model);
+        await JSRunTime.InvokeVoidAsync("localStorage.removeItem", SD.Booking_View_Model);
         HomeViewModel.EndDate = HomeViewModel.StartDate.AddDays(HomeViewModel.NoOfNights);
         string datas = JsonSerializer.Serialize(HomeViewModel);
-        await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Booking_View_Model, datas);
+        await JSRunTime.InvokeVoidAsync("localStorage.setItem", SD.Booking_View_Model, datas);
         await GetRooms(); 
     }
 }
