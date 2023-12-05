@@ -13,6 +13,7 @@ using Common;
 using Stripe;
 using NLog;
 using System.IO;
+using Microsoft.Extensions.Options;
 //using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace LibertyVilla_WebApi
@@ -37,8 +38,17 @@ namespace LibertyVilla_WebApi
             }));
             // Add services to the container.
             var connection = builder.Configuration.GetConnectionString("LibertyVillaConnectionString");
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)
-          ));
+            // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)
+            //));
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(connection, sqlServerOptions =>
+                {
+                    // Optional: Configure additional SQL Server options if needed
+                    // sqlServerOptions.CommandTimeout(60);
+                });
+            });
+
 
             /*builder.Services.Configure<CookiePolicyOptions>(options =>
             {

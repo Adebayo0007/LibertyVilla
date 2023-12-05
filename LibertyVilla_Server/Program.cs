@@ -18,8 +18,16 @@ namespace LibertyVilla_Server
 
             // Add services to the container.
             var connection = builder.Configuration.GetConnectionString("LibertyVillaConnectionString");
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)
-          ));
+            // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)
+            //));
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(connection, sqlServerOptions =>
+                {
+                    // Optional: Configure additional SQL Server options if needed
+                    // sqlServerOptions.CommandTimeout(60);
+                });
+            });
 
             builder.Services.Configure<CookiePolicyOptions>(options =>
             {
