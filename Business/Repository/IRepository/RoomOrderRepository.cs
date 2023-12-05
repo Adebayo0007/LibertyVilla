@@ -65,8 +65,6 @@ namespace Business.Repository.IRepository
                 RoomOrderDetailDto roomOrderDetailsDto = _mapper.Map<RoomOrderDetail, RoomOrderDetailDto>(roomOrder);
                 roomOrderDetailsDto.HotelRoomDto.TotalDays = roomOrderDetailsDto.CheckOutDate.Subtract(roomOrderDetailsDto.CheckInDate).Days;
                 return roomOrderDetailsDto;
-
-
             }
             catch(Exception ex) 
             {

@@ -3,8 +3,7 @@ using Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using IAuthenticationService = VillaClient.Client.Service.Iservice.IAuthenticationService;
-
+using VillaClient.Client.Service.Iservice;
 namespace VillaClient.Client.Service
 {
     public class AuthenticationService : IAuthenticationService

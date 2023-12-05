@@ -19,7 +19,7 @@ namespace VillaClient.Client
 
            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApiBaseUrl")) });
            // builder.Services.AddBlazoredLocalStorage();
-            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IRoomService, RoomService>(); 
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IRoomOrderDetailsService, RoomOrderDetailsService>();

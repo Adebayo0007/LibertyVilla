@@ -39,18 +39,19 @@
     {
         try
         {
-           
-
-            var response = await AuthenticationService.Login(LoginModel);
-            if (response != null)
+            if (LoginModel != null)
             {
-                string result = JsonSerializer.Serialize(response);
-                await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Login_Details, result);
-                NavigationManager.NavigateTo($"rooms", true);
-            }
-            else
-            {
-                throw new ArgumentException(response.Message);
+                var response = await AuthenticationService.Login(LoginModel);
+                if (response != null)
+                {
+                    string result = JsonSerializer.Serialize(response);
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", SD.Login_Details, result);
+                    NavigationManager.NavigateTo($"rooms", true);
+                }
+                else
+                {
+                    throw new ArgumentException(response.Message);
+                }
             }
         }
         catch (Exception ex)
